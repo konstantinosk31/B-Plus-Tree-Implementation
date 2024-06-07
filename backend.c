@@ -55,11 +55,6 @@
  */
 
 #include <stdbool.h>
-#ifdef _WIN32
-#define bool char
-#define false 0
-#define true 1
-#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -999,7 +994,7 @@ int get_neighbor_index(node * n) {
 
 	// Error state.
 	printf("Search for nonexistent pointer to node in parent.\n");
-	printf("Node:  %#lx\n", (unsigned long)n);
+	printf("Node:  %#lx\n", (unsigned long long)n);
 	exit(EXIT_FAILURE);
 }
 
