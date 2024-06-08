@@ -158,11 +158,6 @@ bool verbose_output = false;
 
 // Output and utility.
 
-void license_notice(void);
-
-int height(node * const root);
-int path_to_root(node * const root, node * child);
-
 node * find_leaf(node * const root, int key, bool verbose);
 record * find(node * root, int key, bool verbose, node ** leaf_out);
 int cut(int length);
@@ -186,49 +181,15 @@ node * insert(node * root, int key, int value);
 
 int get_neighbor_index(node * n);
 node * adjust_root(node * root);
-node * coalesce_nodes(node * root, node * n, node * neighbor,
-                      int neighbor_index, int k_prime);
-node * redistribute_nodes(node * root, node * n, node * neighbor,
-                          int neighbor_index,
-		int k_prime_index, int k_prime);
+node * coalesce_nodes(node * root, node * n, node * neighbor, int neighbor_index, int k_prime);
+node * redistribute_nodes(node * root, node * n, node * neighbor, int neighbor_index, int k_prime_index, int k_prime);
 node * delete_entry(node * root, node * n, int key, void * pointer);
 node * delete(node * root, int key);
-
-
 
 
 // FUNCTION DEFINITIONS.
 
 // OUTPUT AND UTILITIES
-
-
-/* Utility function to give the height
- * of the tree, which length in number of edges
- * of the path from the root to any leaf.
- */
-int height(node * const root) {
-	int h = 0;
-	node * c = root;
-	while (!c->is_leaf) {
-		c = c->pointers[0];
-		h++;
-	}
-	return h;
-}
-
-
-/* Utility function to give the length in edges
- * of the path from any node to the root.
- */
-int path_to_root(node * const root, node * child) {
-	int length = 0;
-	node * c = child;
-	while (c != root) {
-		c = c->parent;
-		length++;
-	}
-	return length;
-}
 
 
 /* Traces the path from the root to a leaf, searching
@@ -743,7 +704,7 @@ int get_neighbor_index(node * n) {
 
 	// Error state.
 	printf("Search for nonexistent pointer to node in parent.\n");
-	printf("Node:  %#lx\n", (unsigned long long)n);
+	printf("Node:  %#llx\n", (unsigned long long)n);
 	exit(EXIT_FAILURE);
 }
 
