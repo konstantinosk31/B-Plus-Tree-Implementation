@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B+ Tree Implementation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        input[type="text"], button {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #graph {
+            margin-top: 20px;
+        }
+        pre {
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>B+ Tree Implementation</h1>
+    <label for="key">Enter key:</label>
+    <input type="text" id="key">
+    <br>
+    <button onclick="insertKey()">Insert</button>
+    <button onclick="deleteKey()">Delete</button>
+    <button onclick="searchKey()">Search</button>
+    <div id="result"></div>
+    <div id="graph"></div>
+    <pre id="info"></pre>
+
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
+    <script src="backend.js"></script>
+    <script>
+        let dot = "";
+
+        // Helper function to convert a C string (null-terminated) in WebAssembly memory to a JavaScript string
+        function cStringToJsString(ptr) {
+            const memory = Module.HEAPU8;
+            let str = "";
+            for (let i = ptr; memory[i] !== 0; i++) {
+                str += String.fromCharCode(memory[i]);
+            }
+            return str;
+        }
+
+        function updateGraph() {
+            const graph = document.getElementById('graph');
+            graph.innerHTML = '';
+            const viz = new Viz();
+            viz.renderSVGElement(dot)
+                .then(element => {
+                    graph.appendChild(element);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+
+        function insertKey() {
+            const key = document.getElementById('key').value;
+            window.backend.insert_and_export_dot_file(parseInt(key));
+            dot = cStringToJsString(window.backend.generate_dot());
+            updateGraph();
+        }
+
+        function deleteKey() {
+            const key = document.getElementById('key').value;
+            window.backend.delete_and_export_dot_file(parseInt(key));
+            dot = cStringToJsString(window.backend.generate_dot());
+            updateGraph();
+        }
+
+        function searchKey() {
+            const key = document.getElementById('key').value;
+            const result = window.backend.search_and_export_bool(parseInt(key)) ? `Key ${key} found!` : `Key ${key} not found!`;
+            document.getElementById('result').innerText = result;
+            dot = cStringToJsString(window.backend.generate_dot());
+            updateGraph();
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const info = document.getElementById('info');
+            info.textContent = `
+                Created for the purposes of the course "Databases" at ECE NTUA.
+                Authors:
+                - Sotirios <sakakos> Kakos
+                - Konstantinos <konstantinosk31> Kritharidis
+                - Dimitrios <minageus> Minagias
+
+                Large portion of the backend was written by Amittai Aviram (http://www.amittai.com).
+                The LICENSE file is included in the repository.
+            `;
+
+            Module.onRuntimeInitialized = () => {
+                window.backend = {
+                    insert_and_export_dot_file: Module.cwrap('insert_and_export_dot_file', null, ['number']),
+                    delete_and_export_dot_file: Module.cwrap('delete_and_export_dot_file', null, ['number']),
+                    generate_dot: Module.cwrap('generate_dot', 'number', []),
+                    search_and_export_bool: Module.cwrap('search_and_export_bool', 'number', ['number']),
+                };
+            };
+        });
+    </script>
+</body>
+</html>
