@@ -142,7 +142,7 @@
             const order = orderInput ? parseInt(orderInput) : 4; // Default order is 4
             window.backend.change_order(order);
             document.getElementById('result').innerText = `B+ Tree order changed to ${order}`;
-            dot = "";
+            dot = cStringToJsString(window.backend.generate_dot());
             updateGraph();
         }
 
