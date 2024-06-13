@@ -16,7 +16,9 @@ The LICENSE is included in the backend.c file.
     git clone https://github.com/minageus/B-Plus-Tree-Implementation.git
     ```
 
-2. Open a localhost. For example using Python3 and port 8000:
+2.  Change directory and go to the directory of the cloned repository.
+
+3.  Open a localhost. For example using Python3 and port 8000:
     ```
     python3 -m http.server 8000
     ```
@@ -39,5 +41,7 @@ If you want to make changes to the code and need to recompile it, here are the d
     ./emsdk activate latest
     source ./emsdk_env.sh
     ```
+
+    If it is installed, make sure that the `emsdk_env.sh` is sourced.
 
 2. Run the Makefile using the instruction `make` in the directory of our cloned repository
