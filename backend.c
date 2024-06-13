@@ -1,7 +1,16 @@
-/*
- *  bpt.c  
- */
-#define Version "1.16.1"
+/*	
+ *	Created for the purposes of the course "Databases" at ECE NTUA.
+ *	Authors:
+ *	- Sotirios <sakakos> Kakos
+ *	- Konstantinos <konstantinosk31> Kritharidis
+ *	- Dimitrios <minageus> Minagias
+ *
+ *	Large portion of the backend was written by Amittai Aviram (http://www.amittai.com).
+ *	The LICENSE is included below.
+ *  
+*/
+
+
 /*
  *
  *  bpt:  B+ Tree Implementation
