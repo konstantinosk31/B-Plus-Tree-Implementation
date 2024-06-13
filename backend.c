@@ -195,6 +195,16 @@ node * redistribute_nodes(node * root, node * n, node * neighbor, int neighbor_i
 node * delete_entry(node * root, node * n, int key, void * pointer);
 node * delete(node * root, int key);
 
+// Communication with frontend
+
+void free_tree(node *node);
+void change_order(int new_order);
+void insert_and_export_dot_file(int key);
+void delete_and_export_dot_file(int key);
+bool search_and_export_bool(int key);
+void append_to_buffer(char **buffer, size_t *buf_size, const char *str);
+char *generate_dot();
+
 
 // FUNCTION DEFINITIONS.
 
@@ -1073,9 +1083,31 @@ node * destroy_tree(node * root) {
 	return NULL;
 }
 
-//!!! OUR FUNCTIONS
+// Communication with frontend
 
 node * root = NULL;
+
+void free_tree(node *node) {
+    if (node == NULL) return;
+
+    if (!node->is_leaf) {
+        for (int i = 0; i <= node->num_keys; i++) {
+            free_tree(node->pointers[i]);
+        }
+    }
+
+    free(node->keys);
+    free(node->pointers);
+    free(node);
+}
+
+void change_order(int new_order) {
+    if (root != NULL) {
+        free_tree(root);
+        root = NULL;
+    }
+    order = new_order;
+}
 
 void insert_and_export_dot_file(int key){
 	root = insert(root, key, key);

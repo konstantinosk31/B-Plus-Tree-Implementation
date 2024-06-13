@@ -1352,6 +1352,7 @@ var wasmImports = {
 };
 var wasmExports = createWasm();
 var ___wasm_call_ctors = createExportWrapper('__wasm_call_ctors', 0);
+var _change_order = Module['_change_order'] = createExportWrapper('change_order', 1);
 var _insert_and_export_dot_file = Module['_insert_and_export_dot_file'] = createExportWrapper('insert_and_export_dot_file', 1);
 var _delete_and_export_dot_file = Module['_delete_and_export_dot_file'] = createExportWrapper('delete_and_export_dot_file', 1);
 var _search_and_export_bool = Module['_search_and_export_bool'] = createExportWrapper('search_and_export_bool', 1);

@@ -6,40 +6,84 @@
     <title>B+ Tree Implementation</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
-            background-color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
         }
         h1 {
             color: #333;
+            text-align: center;
         }
-        input[type="text"], button {
-            margin: 10px 0;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: calc(100% - 24px);
             padding: 10px;
+            margin-top: 10px;
             font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px 5px 0 0;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #007bff;
         }
         #graph {
             margin-top: 20px;
+            text-align: center;
         }
         pre {
-            background: #fff;
-            padding: 10px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 4px;
             border: 1px solid #ddd;
         }
     </style>
 </head>
 <body>
     <h1>B+ Tree Implementation</h1>
-    <label for="key">Enter key:</label>
-    <input type="text" id="key">
-    <br>
-    <button onclick="insertKey()">Insert</button>
-    <button onclick="deleteKey()">Delete</button>
-    <button onclick="searchKey()">Search</button>
-    <div id="result"></div>
-    <div id="graph"></div>
-    <pre id="info"></pre>
+    <div class="container">
+        <label for="order">Enter order (default is 4, min is 3, max is 20):</label>
+        <input type="text" id="order" placeholder="4">
+        <button onclick="changeOrder()">Set Order</button>
+        <br>
+        <label for="key">Enter key:</label>
+        <input type="text" id="key">
+        <br>
+        <button onclick="insertKey()">Insert</button>
+        <button onclick="deleteKey()">Delete</button>
+        <button onclick="searchKey()">Search</button>
+        <div id="result"></div>
+        <div id="graph"></div>
+        <pre id="info"></pre>
+    </div>
 
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
@@ -93,18 +137,28 @@
             updateGraph();
         }
 
+        function changeOrder() {
+            const orderInput = document.getElementById('order').value;
+            const order = orderInput ? parseInt(orderInput) : 4; // Default order is 4
+            window.backend.change_order(order);
+            document.getElementById('result').innerText = `B+ Tree order changed to ${order}`;
+            dot = "";
+            updateGraph();
+        }
+
         document.addEventListener('DOMContentLoaded', (event) => {
             const info = document.getElementById('info');
-            info.textContent = `
-                Created for the purposes of the course "Databases" at ECE NTUA.
-                Authors:
-                - Sotirios <sakakos> Kakos
-                - Konstantinos <konstantinosk31> Kritharidis
-                - Dimitrios <minageus> Minagias
+            info.textContent =
+`
+Created for the purposes of the course "Databases" at ECE NTUA.
+Authors:
+- Sotirios <sakakos> Kakos
+- Konstantinos <konstantinosk31> Kritharidis
+- Dimitrios <minageus> Minagias
 
-                Large portion of the backend was written by Amittai Aviram (http://www.amittai.com).
-                The LICENSE is included in the backend.c file.
-            `;
+Large portion of the backend was written by Amittai Aviram (http://www.amittai.com).
+The LICENSE file is included in the repository.
+`;
 
             Module.onRuntimeInitialized = () => {
                 window.backend = {
@@ -112,6 +166,7 @@
                     delete_and_export_dot_file: Module.cwrap('delete_and_export_dot_file', null, ['number']),
                     generate_dot: Module.cwrap('generate_dot', 'number', []),
                     search_and_export_bool: Module.cwrap('search_and_export_bool', 'number', ['number']),
+                    change_order: Module.cwrap('change_order', null, ['number']),
                 };
             };
         });
